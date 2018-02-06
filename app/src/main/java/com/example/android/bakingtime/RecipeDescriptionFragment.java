@@ -25,10 +25,22 @@ public class RecipeDescriptionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_step_description,container,false);
         Bundle incomingBundle = getArguments();
+        if (incomingBundle!=null){
         stepsDescription = incomingBundle.getParcelable("step");
-        String description = stepsDescription != null ? stepsDescription.getDescription() : null;
-        TextView descriptionTextView =  rootView.findViewById(R.id.description_text);
-        descriptionTextView.setText(description);
+            TextView descriptionTextView =  rootView.findViewById(R.id.description_text);
+            if (stepsDescription != null) {
+                String description = stepsDescription.getDescription();
+
+                descriptionTextView.setText(description);
+
+            }else{
+                descriptionTextView.setText("Not done");
+            }
+
+
+
+        }
+
 
 //        String videoURL = stepsDescription.getVideoURL();
 //        String thumbnailURL = stepsDescription.getThumbnailURL();

@@ -43,14 +43,14 @@ public class RecipeDetailsActivity extends AppCompatActivity implements
         recipeIngredients = recipe.getIngredients();
 
 
-
-        IngredientsHeaderFragment ingredientsFragment = new IngredientsHeaderFragment();
-        ingredientsFragment.setArguments(stepsBundle);
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.ingredient_card_container,ingredientsFragment)
-                .commit();
-
+        if (savedInstanceState == null) {
+            IngredientsHeaderFragment ingredientsFragment = new IngredientsHeaderFragment();
+            ingredientsFragment.setArguments(stepsBundle);
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.ingredient_card_container, ingredientsFragment)
+                    .commit();
+        }
 
 
 

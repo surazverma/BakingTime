@@ -15,7 +15,7 @@ public class StepsDescActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_steps_desc);
         Bundle incomingBundle = getIntent().getExtras();
-        Step currentStep = incomingBundle.getParcelable("steps");
+        Step currentStep = incomingBundle.getParcelable("currentStep");
 
         Bundle outGoingBundle = new Bundle();
         outGoingBundle.putParcelable("step",currentStep);
