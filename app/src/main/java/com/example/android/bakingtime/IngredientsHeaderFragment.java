@@ -26,6 +26,7 @@ public class IngredientsHeaderFragment extends Fragment implements RecipeStepLis
     private List<Step> recipeSteps;
     private Step currentStep;
     private RecipeStepListAdapter mAdapter;
+    private int clickedItemPosition;
 
 
     public IngredientsHeaderFragment(){
@@ -35,8 +36,8 @@ public class IngredientsHeaderFragment extends Fragment implements RecipeStepLis
     @Override
     public void onItemClicked(int itemPosition) {
 
-        Toast.makeText(getContext(),"item position"+itemPosition,Toast.LENGTH_SHORT).show();
 
+        clickedItemPosition = itemPosition;
     }
 
 
@@ -76,7 +77,12 @@ public class IngredientsHeaderFragment extends Fragment implements RecipeStepLis
         stepList.setAdapter(mAdapter);
 
 
-
+        stepList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(),"the current Position is "+clickedItemPosition,Toast.LENGTH_SHORT).show();
+            }
+        });
 
 
 

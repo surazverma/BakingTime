@@ -45,7 +45,6 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
         holder.recipeCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context,"It is working for the whole card nibba and the position is "+position,Toast.LENGTH_SHORT).show();
 
                 Intent recipeDetailIntent = new Intent(context, RecipeDetailsActivity.class);
                 Recipes currentRecipe = recipes.get(position);
