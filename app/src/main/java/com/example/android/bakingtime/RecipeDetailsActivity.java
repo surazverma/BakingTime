@@ -14,19 +14,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RecipeDetailsActivity extends AppCompatActivity implements
-        IngredientsHeaderFragment.OnCardClickListener{
+        IngredientsHeaderFragment.OnCardClickListener,RecipeDescriptionFragment.ButtonClickListener{
     private Recipes recipe;
     private List<Ingredient> recipeIngredients ;
     private List<Step> recipeSteps;
     private Step currentStep;
     private int itemPostion;
-    private boolean itemClicked;
+    private boolean mTwoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_details);
-
+        if(findViewById(R.id.recipe_details_linear_layout)!=null){
+            mTwoPane = true;
+        }else{
+            mTwoPane = false;
+        }
         Bundle incomingBundle = getIntent().getExtras();
         if (incomingBundle!=null){
             recipe = incomingBundle.getParcelable("recipe");
@@ -40,6 +44,7 @@ public class RecipeDetailsActivity extends AppCompatActivity implements
         recipeSteps = recipe.getSteps();
         Bundle stepsBundle = new Bundle();
         stepsBundle.putParcelableArrayList("steps", (ArrayList<? extends Parcelable>) recipeSteps);
+        stepsBundle.putBoolean("mTwoPane",mTwoPane);
         recipeIngredients = recipe.getIngredients();
 
 
@@ -68,5 +73,16 @@ public class RecipeDetailsActivity extends AppCompatActivity implements
     }
 
 
+    @Override
+    public void ButtonClicked(List<Step> steps, int stepPosition) {
+        Bundle stepBundle = new Bundle();
+        stepBundle.putParcelableArrayList("ListOfSteps", (ArrayList<? extends Parcelable>) steps);
+        stepBundle.putInt("clickedPosition",stepPosition);
+        stepBundle.putBoolean("mTwoPane",true);
+        RecipeDescriptionFragment recipeDescriptionFragment = new RecipeDescriptionFragment();
+        recipeDescriptionFragment.setArguments(stepBundle);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.recipe_description_container,recipeDescriptionFragment).commit();
 
+    }
 }

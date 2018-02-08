@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,11 +25,13 @@ import java.util.List;
  * Created by Suraz Verma on 2/1/2018.
  */
 
-public class IngredientsHeaderFragment extends Fragment implements RecipeStepListAdapter.ItemClickListener {
+public class IngredientsHeaderFragment extends Fragment implements RecipeStepListAdapter.ItemClickListener,RecipeDescriptionFragment.ButtonClickListener {
     private List<Step> recipeSteps;
     private RecipeStepListAdapter mAdapter;
     private int clickedItemPosition;
     private static final String CURRENT_STATE = "current_state";
+    private Bundle currentStateForFragment;
+    private boolean mTwoPane;
 
 
     public IngredientsHeaderFragment(){
@@ -37,22 +40,43 @@ public class IngredientsHeaderFragment extends Fragment implements RecipeStepLis
 
     @Override
     public void onItemClicked(int itemPosition) {
-        Intent descriptionIntent = new Intent(getContext(), StepsDescActivity.class);
-        Step currentStep = recipeSteps.get(itemPosition);
+
+//        Step currentStep = recipeSteps.get(itemPosition);
         Bundle stepBundle = new Bundle();
-        stepBundle.putParcelable("currentStep",currentStep);
-        descriptionIntent.putExtras(stepBundle);
-        getContext().startActivity(descriptionIntent);
+//        stepBundle.putParcelable("currentStep",currentStep);
+        stepBundle.putParcelableArrayList("ListOfSteps", (ArrayList<? extends Parcelable>) recipeSteps);
+        stepBundle.putInt("clickedPosition",itemPosition);
 
-//        RecipeDescriptionFragment recipeDescriptionFragment = new RecipeDescriptionFragment();
-//        recipeDescriptionFragment.setArguments(stepBundle);
-//        FragmentManager fragmentManager = getFragmentManager();
-//        fragmentManager.beginTransaction().add(R.id.recipe_description_container,recipeDescriptionFragment).commit();
+        if(mTwoPane) {
+            stepBundle.putBoolean("mTwoPane",mTwoPane);
+            if (currentStateForFragment == null) {
 
+                RecipeDescriptionFragment recipeDescriptionFragment = new RecipeDescriptionFragment();
+                recipeDescriptionFragment.setArguments(stepBundle);
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.recipe_description_container, recipeDescriptionFragment).commit();
+            }
+        }else{
+            stepBundle.putBoolean("mTwoPane",mTwoPane);
+            Intent descriptionIntent = new Intent(getContext(), StepsDescActivity.class);
+            descriptionIntent.putExtras(stepBundle);
+            getContext().startActivity(descriptionIntent);
+        }
 
 
     }
 
+    @Override
+    public void ButtonClicked(List<Step> steps, int stepPosition) {
+//        Bundle stepBundle = new Bundle();
+//        stepBundle.putParcelableArrayList("ListOfSteps", (ArrayList<? extends Parcelable>) steps);
+//        stepBundle.putInt("clickedPosition",stepPosition);
+//        RecipeDescriptionFragment recipeDescriptionFragment = new RecipeDescriptionFragment();
+//        recipeDescriptionFragment.setArguments(stepBundle);
+//        FragmentManager fragmentManager = getFragmentManager();
+//        fragmentManager.beginTransaction().replace(R.id.recipe_description_container,recipeDescriptionFragment).commit();
+
+    }
 
 
     public interface OnCardClickListener{
@@ -78,31 +102,26 @@ public class IngredientsHeaderFragment extends Fragment implements RecipeStepLis
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putParcelableArrayList(CURRENT_STATE, (ArrayList<? extends Parcelable>) recipeSteps);
+        currentStateForFragment = outState;
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_recipe_ingredient_card,container,false);
+
         Bundle incomingBundle = getArguments();
         if (savedInstanceState!=null){
             recipeSteps = savedInstanceState.getParcelableArrayList(CURRENT_STATE);
         }
         recipeSteps = incomingBundle.getParcelableArrayList("steps");
-
+        mTwoPane = incomingBundle.getBoolean("mTwoPane");
         RecyclerView stepList = rootView.findViewById(R.id.recipe_step_list_rv);
         mAdapter = new RecipeStepListAdapter(getContext(),new ArrayList<Step>(),this);
         mAdapter.updateList(recipeSteps,getContext());
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         stepList.setLayoutManager(layoutManager);
         stepList.setAdapter(mAdapter);
-
-
-
-
-
-
-
 
 
         CardView ingredientCard =  rootView.findViewById(R.id.recipe_ingredient_card);
