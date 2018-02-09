@@ -1,10 +1,12 @@
 package com.example.android.bakingtime;
 
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -95,17 +97,20 @@ public class RecipeDescriptionFragment extends Fragment {
 
         final TextView descriptionTextView =  rootView.findViewById(R.id.description_text);
                 descriptionTextView.setText(description);
-
+        boolean playerAvailable;
         if(!videoURL.isEmpty()){
             mediaUri = Uri.parse(videoURL).buildUpon().build();
             initializePlayer(mediaUri);
+            playerAvailable = true;
         }
         else if (!thumbnailURL.isEmpty()){
             mediaUri = Uri.parse(thumbnailURL).buildUpon().build();
             initializePlayer(mediaUri);
+            playerAvailable = true;
         }else{
             simpleExoPlayer = null;
             simpleExoPlayerView.setVisibility(View.GONE);
+            playerAvailable = false;
         }
 
         FloatingActionButton nextButton =  rootView.findViewById(R.id.next_button);
@@ -134,8 +139,20 @@ public class RecipeDescriptionFragment extends Fragment {
                 }
             }
         });
+        CardView descriptionCardView = rootView.findViewById(R.id.description_card);
+        boolean landscape ;
+        if(getContext().getResources().getConfiguration().orientation== Configuration.ORIENTATION_LANDSCAPE){
+            landscape = true;
+        }else{
+            landscape = false;
+        }
 
-
+        if(!mTwoPane && landscape && playerAvailable){
+            descriptionCardView.setVisibility(View.GONE);
+            descriptionTextView.setVisibility(View.GONE);
+            nextButton.setVisibility(View.GONE);
+            prevButton.setVisibility(View.GONE);
+        }
         return rootView;
 
     }

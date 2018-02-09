@@ -42,10 +42,12 @@ public class RecipeDetailsActivity extends AppCompatActivity implements
         String recipeName = recipe.getName();
         setTitle(recipeName);
         recipeSteps = recipe.getSteps();
+        recipeIngredients = recipe.getIngredients();
         Bundle stepsBundle = new Bundle();
         stepsBundle.putParcelableArrayList("steps", (ArrayList<? extends Parcelable>) recipeSteps);
+        stepsBundle.putParcelableArrayList("ingredients", (ArrayList<? extends Parcelable>) recipeIngredients);
         stepsBundle.putBoolean("mTwoPane",mTwoPane);
-        recipeIngredients = recipe.getIngredients();
+
 
 
         if (savedInstanceState == null) {

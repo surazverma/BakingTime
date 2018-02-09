@@ -14,9 +14,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.android.bakingtime.Adapters.IngredientListAdapter;
 import com.example.android.bakingtime.Adapters.RecipeStepListAdapter;
+import com.example.android.bakingtime.Model.Ingredient;
 import com.example.android.bakingtime.Model.Step;
 import com.example.android.bakingtime.Utils.StepsDescActivity;
+import com.example.android.bakingtime.Utils.UpdateIngredientList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +31,8 @@ import java.util.List;
 public class IngredientsHeaderFragment extends Fragment implements RecipeStepListAdapter.ItemClickListener,RecipeDescriptionFragment.ButtonClickListener {
     private List<Step> recipeSteps;
     private RecipeStepListAdapter mAdapter;
+    private ArrayList<Ingredient> recipeIngredients;
+    private IngredientListAdapter mIngredientAdapter;
     private int clickedItemPosition;
     private static final String CURRENT_STATE = "current_state";
     private Bundle currentStateForFragment;
@@ -115,6 +120,7 @@ public class IngredientsHeaderFragment extends Fragment implements RecipeStepLis
             recipeSteps = savedInstanceState.getParcelableArrayList(CURRENT_STATE);
         }
         recipeSteps = incomingBundle.getParcelableArrayList("steps");
+        recipeIngredients = incomingBundle.getParcelableArrayList("ingredients");
         mTwoPane = incomingBundle.getBoolean("mTwoPane");
         RecyclerView stepList = rootView.findViewById(R.id.recipe_step_list_rv);
         mAdapter = new RecipeStepListAdapter(getContext(),new ArrayList<Step>(),this);
@@ -125,13 +131,22 @@ public class IngredientsHeaderFragment extends Fragment implements RecipeStepLis
 
 
         CardView ingredientCard =  rootView.findViewById(R.id.recipe_ingredient_card);
+        RecyclerView ingredientRecyclerView = rootView.findViewById(R.id.ingredients_list);
+        RecyclerView.LayoutManager ingredientLayoutManager = new LinearLayoutManager(getContext());
+        mIngredientAdapter = new IngredientListAdapter(getContext(),new ArrayList<Ingredient>());
+        mIngredientAdapter.updateList(recipeIngredients,getContext());
+        ingredientRecyclerView.setLayoutManager(ingredientLayoutManager);
+        ingredientRecyclerView.setAdapter(mIngredientAdapter);
+
+
+
         ingredientCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 cardListener.OnCardSelected();
             }
         });
-
+        UpdateIngredientList.startService(getContext(),recipeIngredients);
         return rootView;
 
     }

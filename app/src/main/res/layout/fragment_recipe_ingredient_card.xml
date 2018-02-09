@@ -11,25 +11,38 @@
 
     android:id="@+id/recipe_ingredient_card"
     android:layout_width="match_parent"
-    android:layout_height="75dp"
+    android:layout_height="200dp"
     app:cardElevation="4dp"
     app:cardBackgroundColor="#880e4f"
     android:layout_margin="8dp">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#ffffff"
-
         android:text="@string/recipe_ingredient_label"
-        android:layout_gravity="center"
+        android:layout_margin="8dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
         />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/ingredients_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        />
+    </LinearLayout>
+
+
 
 </android.support.v7.widget.CardView>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recipe_step_list_rv"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp">
 
     </android.support.v7.widget.RecyclerView>
 </LinearLayout>
