@@ -18,8 +18,8 @@ public class RecipeDetailsActivity extends AppCompatActivity implements
     private Recipes recipe;
     private List<Ingredient> recipeIngredients ;
     private List<Step> recipeSteps;
-    private Step currentStep;
-    private int itemPostion;
+    private String recipeName;
+
     private boolean mTwoPane;
 
     @Override
@@ -39,7 +39,7 @@ public class RecipeDetailsActivity extends AppCompatActivity implements
             recipe = savedInstanceState.getParcelable("recipe");
         }
 
-        String recipeName = recipe.getName();
+        recipeName = recipe.getName();
         setTitle(recipeName);
         recipeSteps = recipe.getSteps();
         recipeIngredients = recipe.getIngredients();
@@ -47,7 +47,7 @@ public class RecipeDetailsActivity extends AppCompatActivity implements
         stepsBundle.putParcelableArrayList("steps", (ArrayList<? extends Parcelable>) recipeSteps);
         stepsBundle.putParcelableArrayList("ingredients", (ArrayList<? extends Parcelable>) recipeIngredients);
         stepsBundle.putBoolean("mTwoPane",mTwoPane);
-
+        stepsBundle.putString("recipe_name",recipeName);
 
 
         if (savedInstanceState == null) {
@@ -64,16 +64,7 @@ public class RecipeDetailsActivity extends AppCompatActivity implements
     }
 
 
-    //    @Override
-//    public void OnCardSelected() {
-//
-//        Intent recipeWork = new Intent(this,RecipeWork.class);
-//        Bundle ingredientsBundle = new Bundle();
-//        ingredientsBundle.putParcelableArrayList("ing", (ArrayList<? extends Parcelable>) recipeIngredients);
-//        recipeWork.putExtras(ingredientsBundle);
-//        this.startActivity(recipeWork);
-//
-//    }
+
 
 
     @Override
@@ -82,6 +73,7 @@ public class RecipeDetailsActivity extends AppCompatActivity implements
         stepBundle.putParcelableArrayList("ListOfSteps", (ArrayList<? extends Parcelable>) steps);
         stepBundle.putInt("clickedPosition",stepPosition);
         stepBundle.putBoolean("mTwoPane",true);
+//        stepBundle.putString("recipe_name",recipeName);
         RecipeDescriptionFragment recipeDescriptionFragment = new RecipeDescriptionFragment();
         recipeDescriptionFragment.setArguments(stepBundle);
         FragmentManager fragmentManager = getSupportFragmentManager();

@@ -104,9 +104,7 @@ public class MainActivity extends AppCompatActivity {
             mRecyclerView.setVisibility(View.GONE);
             }
         });
-//        }else{
-//
-//        }
+
 
         inflateViews();
         getIdlingResource();

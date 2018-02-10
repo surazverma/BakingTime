@@ -6,4 +6,6 @@
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
     <string name="default_widget_text">Ingredients List will set after recipe selection</string>
+    <string name="bullets">•</string>
+    <string name="serving_text">Serving:</string>
 </resources>

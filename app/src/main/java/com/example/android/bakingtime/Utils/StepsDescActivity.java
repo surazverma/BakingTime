@@ -21,7 +21,8 @@ public class StepsDescActivity extends AppCompatActivity implements RecipeDescri
         Bundle incomingBundle = getIntent().getExtras();
         List<Step> steps = incomingBundle.getParcelableArrayList("ListOfSteps");
         int currentStepPosition = incomingBundle.getInt("clickedPosition");
-        Step currentStep = incomingBundle.getParcelable("currentStep");
+        String recipeName = incomingBundle.getString("recipe_name");
+        setTitle(recipeName);
 
         Bundle outGoingBundle = new Bundle();
         outGoingBundle.putParcelableArrayList("ListOfSteps", (ArrayList<? extends Parcelable>) steps);

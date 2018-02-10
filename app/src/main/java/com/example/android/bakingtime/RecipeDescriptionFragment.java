@@ -10,6 +10,7 @@ import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.bakingtime.Model.Step;
@@ -46,6 +47,7 @@ public class RecipeDescriptionFragment extends Fragment {
     private static final String CURRENT_STATE = "current_state";
     private BandwidthMeter bandwidthMeter;
     private boolean mTwoPane;
+    private String recipeName;
 
 
     public interface ButtonClickListener{
@@ -67,9 +69,10 @@ public class RecipeDescriptionFragment extends Fragment {
 
 
         View rootView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_step_description,container,false);
+        ImageView videoReplacementImageView = rootView.findViewById(R.id.replacement_image);
         Bundle incomingBundle = getArguments();
 
-//        buttonClickListener = (RecipeDetailsActivity)getActivity();
+
         simpleExoPlayerView  = rootView.findViewById(R.id.video_player_view);
         if (savedInstanceState!=null){
         stepsDescription = savedInstanceState.getParcelable(CURRENT_STATE);
@@ -78,6 +81,8 @@ public class RecipeDescriptionFragment extends Fragment {
         currentRecipeStepList = incomingBundle.getParcelableArrayList("ListOfSteps");
         currentStepPosition = incomingBundle.getInt("clickedPosition");
         mTwoPane = incomingBundle.getBoolean("mTwoPane");
+//        recipeName = incomingBundle.getString("recipe_name");
+
         if(mTwoPane){
                     buttonClickListener = (RecipeDetailsActivity)getActivity();
         }else{
@@ -110,6 +115,8 @@ public class RecipeDescriptionFragment extends Fragment {
         }else{
             simpleExoPlayer = null;
             simpleExoPlayerView.setVisibility(View.GONE);
+            videoReplacementImageView.setImageResource(R.drawable.video_replacement_image);
+            videoReplacementImageView.setVisibility(View.VISIBLE);
             playerAvailable = false;
         }
 
@@ -160,7 +167,7 @@ public class RecipeDescriptionFragment extends Fragment {
 
     private void initializePlayer(Uri mediaURL){
         if(simpleExoPlayer == null){
-//            simpleExoPlayerView = (SimpleExoPlayerView) findViewById(R.id.video_player_view);
+
 
             TrackSelection.Factory videoTrackSelectionFactory =  new AdaptiveVideoTrackSelection.Factory(bandwidthMeter);
             DefaultTrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);

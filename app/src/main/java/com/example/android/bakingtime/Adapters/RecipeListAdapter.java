@@ -8,11 +8,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.bakingtime.Model.Recipes;
 import com.example.android.bakingtime.R;
 import com.example.android.bakingtime.RecipeDetailsActivity;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -40,10 +42,16 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
     public void onBindViewHolder(ViewHolder holder, final int position) {
         final String currentRecipeName = recipes.get(position).getName();
         final int currentRecipeServings = recipes.get(position).getServings();
-
+        String currentRecipeImageUrl = recipes.get(position).getImage();
         holder.recipeName.setText(currentRecipeName);
         holder.servingNumber.setText(String.valueOf(currentRecipeServings));
-        holder.recipeCard.setOnClickListener(new View.OnClickListener() {
+
+        if(!currentRecipeImageUrl.isEmpty()) {
+            Picasso.with(context).load(currentRecipeImageUrl).error(R.drawable.default_baking_image).into(holder.recipeImage);
+        } else{
+            holder.recipeImage.setImageResource(R.drawable.default_baking_image);
+        }
+            holder.recipeCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -74,11 +82,14 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
         TextView recipeName;
         TextView servingNumber;
         CardView recipeCard;
+        ImageView recipeImage;
         public ViewHolder(View view){
             super(view);
+
             servingNumber = view.findViewById(R.id.number_of_serving);
             recipeCard = view.findViewById(R.id.recipe_card);
             recipeName = view.findViewById(R.id.recipe_name);
+            recipeImage = view.findViewById(R.id.recipe_image);
         }
     }
 }

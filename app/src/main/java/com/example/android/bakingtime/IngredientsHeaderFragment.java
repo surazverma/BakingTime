@@ -1,6 +1,5 @@
 package com.example.android.bakingtime;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -28,15 +27,16 @@ import java.util.List;
  * Created by Suraz Verma on 2/1/2018.
  */
 
-public class IngredientsHeaderFragment extends Fragment implements RecipeStepListAdapter.ItemClickListener,RecipeDescriptionFragment.ButtonClickListener {
+public class IngredientsHeaderFragment extends Fragment implements RecipeStepListAdapter.ItemClickListener {
     private List<Step> recipeSteps;
     private RecipeStepListAdapter mAdapter;
     private ArrayList<Ingredient> recipeIngredients;
     private IngredientListAdapter mIngredientAdapter;
-    private int clickedItemPosition;
+
     private static final String CURRENT_STATE = "current_state";
     private Bundle currentStateForFragment;
     private boolean mTwoPane;
+    private String recipeName;
 
 
     public IngredientsHeaderFragment(){
@@ -46,11 +46,12 @@ public class IngredientsHeaderFragment extends Fragment implements RecipeStepLis
     @Override
     public void onItemClicked(int itemPosition) {
 
-//        Step currentStep = recipeSteps.get(itemPosition);
+
         Bundle stepBundle = new Bundle();
-//        stepBundle.putParcelable("currentStep",currentStep);
+
         stepBundle.putParcelableArrayList("ListOfSteps", (ArrayList<? extends Parcelable>) recipeSteps);
         stepBundle.putInt("clickedPosition",itemPosition);
+        stepBundle.putString("recipe_name",recipeName);
 
         if(mTwoPane) {
             stepBundle.putBoolean("mTwoPane",mTwoPane);
@@ -71,38 +72,13 @@ public class IngredientsHeaderFragment extends Fragment implements RecipeStepLis
 
     }
 
-    @Override
-    public void ButtonClicked(List<Step> steps, int stepPosition) {
-//        Bundle stepBundle = new Bundle();
-//        stepBundle.putParcelableArrayList("ListOfSteps", (ArrayList<? extends Parcelable>) steps);
-//        stepBundle.putInt("clickedPosition",stepPosition);
-//        RecipeDescriptionFragment recipeDescriptionFragment = new RecipeDescriptionFragment();
-//        recipeDescriptionFragment.setArguments(stepBundle);
-//        FragmentManager fragmentManager = getFragmentManager();
-//        fragmentManager.beginTransaction().replace(R.id.recipe_description_container,recipeDescriptionFragment).commit();
-
-    }
-
-
-//    public interface OnCardClickListener{
-//        void OnCardSelected();
-//    }
-//    OnCardClickListener cardListener;
 
 
 
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        try{
-//            cardListener = (OnCardClickListener) context;
 
 
-        }catch(ClassCastException e){
-            throw new ClassCastException(context.toString()+"implement OnCardListener");
-        }
-    }
+
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -122,13 +98,13 @@ public class IngredientsHeaderFragment extends Fragment implements RecipeStepLis
         recipeSteps = incomingBundle.getParcelableArrayList("steps");
         recipeIngredients = incomingBundle.getParcelableArrayList("ingredients");
         mTwoPane = incomingBundle.getBoolean("mTwoPane");
+        recipeName = incomingBundle.getString("recipe_name");
         RecyclerView stepList = rootView.findViewById(R.id.recipe_step_list_rv);
         mAdapter = new RecipeStepListAdapter(getContext(),new ArrayList<Step>(),this);
         mAdapter.updateList(recipeSteps,getContext());
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         stepList.setLayoutManager(layoutManager);
         stepList.setAdapter(mAdapter);
-
 
         CardView ingredientCard =  rootView.findViewById(R.id.recipe_ingredient_card);
         RecyclerView ingredientRecyclerView = rootView.findViewById(R.id.ingredients_list);
@@ -138,14 +114,6 @@ public class IngredientsHeaderFragment extends Fragment implements RecipeStepLis
         ingredientRecyclerView.setLayoutManager(ingredientLayoutManager);
         ingredientRecyclerView.setAdapter(mIngredientAdapter);
 
-
-
-//        ingredientCard.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                cardListener.OnCardSelected();
-//            }
-//        });
         UpdateIngredientList.startService(getContext(),recipeIngredients);
         return rootView;
 

@@ -19,7 +19,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".RecipeDetailsActivity" />
-        <activity android:name=".RecipeWork" />
         <activity android:name=".Utils.StepsDescActivity" />
 
         <service android:name=".Utils.UpdateIngredientList"/>
