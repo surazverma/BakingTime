@@ -1,6 +1,5 @@
 package com.example.android.bakingtime;
 
-import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
@@ -25,18 +24,13 @@ public class BakingWidgetProvider extends AppWidgetProvider {
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
-//        CharSequence widgetText = context.getString(R.string.appwidget_text);
+
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.baking_widget_provider);
-        Intent bakingWidgetIntent = new Intent(context,RecipeDetailsActivity.class);
-        bakingWidgetIntent.addCategory(Intent.ACTION_MAIN);
-        bakingWidgetIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-        PendingIntent appPendingIntent = PendingIntent.getActivity(context,0,bakingWidgetIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        views.setPendingIntentTemplate(R.id.widget_list_view,appPendingIntent);
+
         Intent intent = new Intent(context,ListWidgetService.class);
         views.setRemoteAdapter(R.id.widget_list_view,intent);
         views.setEmptyView(R.id.widget_list_view,R.id.empty_view);
-//        views.setTextViewText(R.id.appwidget_text, widgetText);
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);

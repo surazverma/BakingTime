@@ -60,6 +60,8 @@ public class ListWidgetService extends RemoteViewsService {
             views.setTextViewText(R.id.ingredient_quantity,String.valueOf(currentQuantity));
             views.setTextViewText(R.id.ingredient_measure,currentMeasurement);
             views.setTextViewText(R.id.ingredient_name,currentIngredientName);
+//            Intent fillInIntent = new Intent();
+//            views.setOnClickFillInIntent(R.id.ingredient_list_component,fillInIntent);
             return views;
         }
 

@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.android.bakingtime.Model.Recipes;
 import com.example.android.bakingtime.R;
@@ -40,8 +39,10 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         final String currentRecipeName = recipes.get(position).getName();
+        final int currentRecipeServings = recipes.get(position).getServings();
 
         holder.recipeName.setText(currentRecipeName);
+        holder.servingNumber.setText(String.valueOf(currentRecipeServings));
         holder.recipeCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,9 +72,11 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         TextView recipeName;
+        TextView servingNumber;
         CardView recipeCard;
         public ViewHolder(View view){
             super(view);
+            servingNumber = view.findViewById(R.id.number_of_serving);
             recipeCard = view.findViewById(R.id.recipe_card);
             recipeName = view.findViewById(R.id.recipe_name);
         }

@@ -40,13 +40,15 @@ public class RecipeStepListAdapter extends RecyclerView.Adapter<RecipeStepListAd
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Integer currentStepNumber = steps.get(position).getId();
-        if(position == 0){
+        int currentStepNumber = steps.get(position).getId();
+        if(String.valueOf(currentStepNumber).equals("0")){
             holder.stepText.setVisibility(View.GONE);
             holder.stepNumber.setVisibility(View.GONE);
         }else{
-        holder.stepText.setVisibility(View.VISIBLE);}
-        holder.stepNumber.setText(String.valueOf(currentStepNumber));
+
+        holder.stepText.setVisibility(View.VISIBLE);
+            holder.stepNumber.setVisibility(View.VISIBLE);
+        holder.stepNumber.setText(String.valueOf(position));}
         holder.stepShortDescription.setText(steps.get(position).getShortDescription());
 
 

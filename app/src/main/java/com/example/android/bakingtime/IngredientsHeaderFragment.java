@@ -84,10 +84,10 @@ public class IngredientsHeaderFragment extends Fragment implements RecipeStepLis
     }
 
 
-    public interface OnCardClickListener{
-        void OnCardSelected();
-    }
-    OnCardClickListener cardListener;
+//    public interface OnCardClickListener{
+//        void OnCardSelected();
+//    }
+//    OnCardClickListener cardListener;
 
 
 
@@ -96,7 +96,7 @@ public class IngredientsHeaderFragment extends Fragment implements RecipeStepLis
     public void onAttach(Context context) {
         super.onAttach(context);
         try{
-            cardListener = (OnCardClickListener) context;
+//            cardListener = (OnCardClickListener) context;
 
 
         }catch(ClassCastException e){
@@ -140,12 +140,12 @@ public class IngredientsHeaderFragment extends Fragment implements RecipeStepLis
 
 
 
-        ingredientCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cardListener.OnCardSelected();
-            }
-        });
+//        ingredientCard.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                cardListener.OnCardSelected();
+//            }
+//        });
         UpdateIngredientList.startService(getContext(),recipeIngredients);
         return rootView;
 

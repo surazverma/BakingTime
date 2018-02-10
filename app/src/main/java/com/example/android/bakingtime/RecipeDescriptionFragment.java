@@ -148,6 +148,7 @@ public class RecipeDescriptionFragment extends Fragment {
         }
 
         if(!mTwoPane && landscape && playerAvailable){
+
             descriptionCardView.setVisibility(View.GONE);
             descriptionTextView.setVisibility(View.GONE);
             nextButton.setVisibility(View.GONE);

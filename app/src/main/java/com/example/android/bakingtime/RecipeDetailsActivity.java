@@ -1,6 +1,5 @@
 package com.example.android.bakingtime;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.FragmentManager;
@@ -14,7 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RecipeDetailsActivity extends AppCompatActivity implements
-        IngredientsHeaderFragment.OnCardClickListener,RecipeDescriptionFragment.ButtonClickListener{
+        RecipeDescriptionFragment.ButtonClickListener{
+
     private Recipes recipe;
     private List<Ingredient> recipeIngredients ;
     private List<Step> recipeSteps;
@@ -63,16 +63,17 @@ public class RecipeDetailsActivity extends AppCompatActivity implements
 
     }
 
-    @Override
-    public void OnCardSelected() {
 
-        Intent recipeWork = new Intent(this,RecipeWork.class);
-        Bundle ingredientsBundle = new Bundle();
-        ingredientsBundle.putParcelableArrayList("ing", (ArrayList<? extends Parcelable>) recipeIngredients);
-        recipeWork.putExtras(ingredientsBundle);
-        this.startActivity(recipeWork);
-
-    }
+    //    @Override
+//    public void OnCardSelected() {
+//
+//        Intent recipeWork = new Intent(this,RecipeWork.class);
+//        Bundle ingredientsBundle = new Bundle();
+//        ingredientsBundle.putParcelableArrayList("ing", (ArrayList<? extends Parcelable>) recipeIngredients);
+//        recipeWork.putExtras(ingredientsBundle);
+//        this.startActivity(recipeWork);
+//
+//    }
 
 
     @Override
