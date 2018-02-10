@@ -73,7 +73,7 @@ public class RecipeDetailsActivity extends AppCompatActivity implements
         stepBundle.putParcelableArrayList("ListOfSteps", (ArrayList<? extends Parcelable>) steps);
         stepBundle.putInt("clickedPosition",stepPosition);
         stepBundle.putBoolean("mTwoPane",true);
-//        stepBundle.putString("recipe_name",recipeName);
+
         RecipeDescriptionFragment recipeDescriptionFragment = new RecipeDescriptionFragment();
         recipeDescriptionFragment.setArguments(stepBundle);
         FragmentManager fragmentManager = getSupportFragmentManager();

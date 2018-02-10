@@ -106,7 +106,6 @@ public class IngredientsHeaderFragment extends Fragment implements RecipeStepLis
         stepList.setLayoutManager(layoutManager);
         stepList.setAdapter(mAdapter);
 
-        CardView ingredientCard =  rootView.findViewById(R.id.recipe_ingredient_card);
         RecyclerView ingredientRecyclerView = rootView.findViewById(R.id.ingredients_list);
         RecyclerView.LayoutManager ingredientLayoutManager = new LinearLayoutManager(getContext());
         mIngredientAdapter = new IngredientListAdapter(getContext(),new ArrayList<Ingredient>());
