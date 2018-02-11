@@ -6,7 +6,6 @@ import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,8 +16,8 @@ import com.example.android.bakingtime.Adapters.IngredientListAdapter;
 import com.example.android.bakingtime.Adapters.RecipeStepListAdapter;
 import com.example.android.bakingtime.Model.Ingredient;
 import com.example.android.bakingtime.Model.Step;
-import com.example.android.bakingtime.Utils.StepsDescActivity;
-import com.example.android.bakingtime.Utils.UpdateIngredientList;
+import com.example.android.bakingtime.utils.StepsDescActivity;
+import com.example.android.bakingtime.utils.UpdateIngredientList;
 
 import java.util.ArrayList;
 import java.util.List;

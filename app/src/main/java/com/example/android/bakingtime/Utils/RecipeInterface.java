@@ -1,4 +1,4 @@
-package com.example.android.bakingtime.Utils;
+package com.example.android.bakingtime.utils;
 
 import com.example.android.bakingtime.Model.Recipes;
 

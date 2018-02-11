@@ -11,8 +11,8 @@ import com.example.android.bakingtime.Model.Ingredient;
 
 import java.util.ArrayList;
 
-import static com.example.android.bakingtime.Utils.UpdateIngredientList.UPDATE_ACTION;
-import static com.example.android.bakingtime.Utils.UpdateIngredientList.UPDATE_LIST_KEY;
+import static com.example.android.bakingtime.utils.UpdateIngredientList.UPDATE_ACTION;
+import static com.example.android.bakingtime.utils.UpdateIngredientList.UPDATE_LIST_KEY;
 
 /**
  * Implementation of App Widget functionality.

@@ -18,10 +18,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RecipeDetailsActivity" />
-        <activity android:name=".Utils.StepsDescActivity" />
+        <activity android:name=".RecipeDetailsActivity"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"/>
+        </activity>
+        <activity android:name=".utils.StepsDescActivity"
+            android:parentActivityName=".RecipeDetailsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".RecipeDetailsActivity"/>
 
-        <service android:name=".Utils.UpdateIngredientList"/>
+        </activity>
+
+        <service android:name=".utils.UpdateIngredientList"/>
         <service android:name=".ListWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS"/>
 

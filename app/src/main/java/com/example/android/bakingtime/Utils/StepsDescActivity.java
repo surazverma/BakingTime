@@ -1,4 +1,4 @@
-package com.example.android.bakingtime.Utils;
+package com.example.android.bakingtime.utils;
 
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -18,11 +18,13 @@ public class StepsDescActivity extends AppCompatActivity implements RecipeDescri
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_steps_desc);
+//        getActionBar().setDisplayHomeAsUpEnabled(true);
         Bundle incomingBundle = getIntent().getExtras();
         List<Step> steps = incomingBundle.getParcelableArrayList("ListOfSteps");
         int currentStepPosition = incomingBundle.getInt("clickedPosition");
         String recipeName = incomingBundle.getString("recipe_name");
         setTitle(recipeName);
+
 
         Bundle outGoingBundle = new Bundle();
         outGoingBundle.putParcelableArrayList("ListOfSteps", (ArrayList<? extends Parcelable>) steps);

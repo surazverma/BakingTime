@@ -21,11 +21,18 @@ public class RecipeDetailsActivity extends AppCompatActivity implements
     private String recipeName;
 
     private boolean mTwoPane;
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable("recipe",recipe);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_details);
+//        getActionBar().setDisplayHomeAsUpEnabled(true);
+
         if(findViewById(R.id.recipe_details_linear_layout)!=null){
             mTwoPane = true;
         }else{
@@ -55,14 +62,13 @@ public class RecipeDetailsActivity extends AppCompatActivity implements
             ingredientsFragment.setArguments(stepsBundle);
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
-                    .replace(R.id.ingredient_card_container, ingredientsFragment)
+                    .add(R.id.ingredient_card_container, ingredientsFragment)
                     .commit();
         }
 
 
 
     }
-
 
 
 

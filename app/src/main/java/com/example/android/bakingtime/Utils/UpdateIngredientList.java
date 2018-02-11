@@ -1,4 +1,4 @@
-package com.example.android.bakingtime.Utils;
+package com.example.android.bakingtime.utils;
 
 import android.app.IntentService;
 import android.content.Context;

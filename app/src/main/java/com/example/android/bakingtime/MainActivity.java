@@ -17,8 +17,8 @@ import android.widget.TextView;
 
 import com.example.android.bakingtime.Adapters.RecipeListAdapter;
 import com.example.android.bakingtime.Model.Recipes;
-import com.example.android.bakingtime.Utils.RecipeInterface;
-import com.example.android.bakingtime.Utils.SimpleIdlingResource;
+import com.example.android.bakingtime.utils.RecipeInterface;
+import com.example.android.bakingtime.utils.SimpleIdlingResource;
 
 import java.util.ArrayList;
 
@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
             mOfflineImage = (ImageView) findViewById(R.id.offline_image);
             mOfflineText.setVisibility(View.VISIBLE);
             mOfflineImage.setVisibility(View.VISIBLE);
-//            mOfflineImage.setImageResource(R.drawable.ic_wifi_off_icon);
+
             mRecyclerView.setVisibility(View.GONE);
             }
         });
@@ -126,7 +126,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
 
 
 }
