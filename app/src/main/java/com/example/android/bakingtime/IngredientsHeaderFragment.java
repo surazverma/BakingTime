@@ -27,17 +27,23 @@ import java.util.List;
  */
 
 public class IngredientsHeaderFragment extends Fragment implements RecipeStepListAdapter.ItemClickListener {
+    private static final String CURRENT_RV_LIST_STATE ="step_list_state" ;
     private List<Step> recipeSteps;
     private RecipeStepListAdapter mAdapter;
     private ArrayList<Ingredient> recipeIngredients;
     private IngredientListAdapter mIngredientAdapter;
-    private static final String BUNDLE_RECYCLER_LAYOUT = "RecipeDetailsActivity.RecyclerView.layout";
+
     private static final String CURRENT_STATE = "current_state";
+    private static final String CURRENT_ING_LIST_STATE = "ingredient_list_state";
     private Bundle currentStateForFragment;
     private boolean mTwoPane;
     private String recipeName;
     private RecyclerView stepList;
     private RecyclerView ingredientRecyclerView;
+    private RecyclerView.LayoutManager layoutManager;
+    private RecyclerView.LayoutManager ingredientLayoutManager;
+    private Parcelable ingredientListState;
+    private Parcelable listState;
 
 
     public IngredientsHeaderFragment(){
@@ -76,8 +82,13 @@ public class IngredientsHeaderFragment extends Fragment implements RecipeStepLis
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putParcelableArrayList(CURRENT_STATE, (ArrayList<? extends Parcelable>) recipeSteps);
+        ingredientListState = layoutManager.onSaveInstanceState();
+        outState.putParcelable(CURRENT_ING_LIST_STATE, ingredientListState);
+        listState = layoutManager.onSaveInstanceState();
+        outState.putParcelable(CURRENT_RV_LIST_STATE, listState);
         currentStateForFragment = outState;
     }
+
 
     @Nullable
     @Override
@@ -95,12 +106,12 @@ public class IngredientsHeaderFragment extends Fragment implements RecipeStepLis
         stepList = rootView.findViewById(R.id.recipe_step_list_rv);
         mAdapter = new RecipeStepListAdapter(getContext(),new ArrayList<Step>(),this);
         mAdapter.updateList(recipeSteps,getContext());
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+        layoutManager = new LinearLayoutManager(getContext());
         stepList.setLayoutManager(layoutManager);
         stepList.setAdapter(mAdapter);
 
         ingredientRecyclerView= rootView.findViewById(R.id.ingredients_list);
-        RecyclerView.LayoutManager ingredientLayoutManager = new LinearLayoutManager(getContext());
+        ingredientLayoutManager = new LinearLayoutManager(getContext());
         mIngredientAdapter = new IngredientListAdapter(getContext(),new ArrayList<Ingredient>());
         mIngredientAdapter.updateList(recipeIngredients,getContext());
         ingredientRecyclerView.setLayoutManager(ingredientLayoutManager);
@@ -114,15 +125,13 @@ public class IngredientsHeaderFragment extends Fragment implements RecipeStepLis
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
-        if (savedInstanceState!=null){
-            Parcelable savedRecyclerLayoutState = savedInstanceState.getParcelable(BUNDLE_RECYCLER_LAYOUT);
-            stepList.getLayoutManager().onRestoreInstanceState(savedRecyclerLayoutState);
-            ingredientRecyclerView.getLayoutManager().onRestoreInstanceState(savedRecyclerLayoutState);
+        if(ingredientListState!=null){
+            ingredientLayoutManager.onRestoreInstanceState(ingredientListState);
+        }
+        if (listState != null) {
+            layoutManager.onRestoreInstanceState(listState);
         }
     }
 
-    //    @Override
-//    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-//        super.onActivityCreated(savedInstanceState);
-//    }
+
 }

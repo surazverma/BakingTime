@@ -43,9 +43,7 @@ public class RecipeDetailsActivity extends AppCompatActivity implements
         if (incomingBundle!=null){
             if(intent.hasExtra("intent_key")){
                 recipe = incomingBundle.getParcelable("recipe");
-
             }
-
         } else{
             if (intent.hasExtra("intent_key")) {
                 recipe = savedInstanceState.getParcelable("recipe");

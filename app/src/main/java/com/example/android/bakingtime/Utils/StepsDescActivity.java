@@ -18,7 +18,7 @@ public class StepsDescActivity extends AppCompatActivity implements RecipeDescri
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_steps_desc);
-//        getActionBar().setDisplayHomeAsUpEnabled(true);
+
         Bundle incomingBundle = getIntent().getExtras();
         List<Step> steps = incomingBundle.getParcelableArrayList("ListOfSteps");
         int currentStepPosition = incomingBundle.getInt("clickedPosition");

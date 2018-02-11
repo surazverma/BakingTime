@@ -32,7 +32,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    private static final String SAVED_LAYOUT_MANAGER = "saved state";
+    public final static String LIST_STATE_KEY = "recycler_list_state";
     private RecyclerView mRecyclerView;
     private RecipeListAdapter recipeListAdapter;
     private TextView mOfflineText;
@@ -40,7 +40,9 @@ public class MainActivity extends AppCompatActivity {
     private boolean mTwoPane;
     private boolean landscape;
     private RecyclerView.LayoutManager layoutManager;
-    private Bundle mBundleRecyclerViewState;
+    private ArrayList<Recipes> recipes;
+
+    private Parcelable listState;
 
 
     @Nullable
@@ -57,14 +59,15 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         if(getApplicationContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
             landscape = true;
-        }else{
+            }else{
             landscape = false;
         }
         if(findViewById(R.id.main_screen)!=null){
@@ -73,29 +76,63 @@ public class MainActivity extends AppCompatActivity {
             mTwoPane = false;
         }
 
+        internetHandling();
+        inflateViews();
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        listState = layoutManager.onSaveInstanceState();
+        outState.putParcelable(LIST_STATE_KEY, listState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if(savedInstanceState != null)
+            listState = savedInstanceState.getParcelable(LIST_STATE_KEY);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (listState != null) {
+            layoutManager.onRestoreInstanceState(listState);
+        }
+    }
+    private void inflateViews(){
+        mRecyclerView = (RecyclerView) findViewById(R.id.recipe_recycler_view);
+        if(mTwoPane){
+             layoutManager = new GridLayoutManager(this,2);
+        }else{
+         layoutManager = new LinearLayoutManager(this);
+        }
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setHasFixedSize(true);
+
+    }
+
+    private void internetHandling(){
         Retrofit.Builder builder =  new Retrofit.Builder()
                 .baseUrl("https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/")
                 .addConverterFactory(GsonConverterFactory.create());
 
         Retrofit retrofit = builder.build();
         RecipeInterface mService = retrofit.create(RecipeInterface.class);
-        Call<ArrayList<Recipes>>recipe =  mService.getRecipes();
-
-
+        final Call<ArrayList<Recipes>> recipe =  mService.getRecipes();
         if(mIdlingResource!=null){
             mIdlingResource.setIdleState(false);
         }
-
-
-
-
         recipe.enqueue(new Callback<ArrayList<Recipes>>() {
             @Override
             public void onResponse(Call<ArrayList<Recipes>> call, Response<ArrayList<Recipes>> response) {
-                ArrayList<Recipes> recipe = response.body();
-                mRecyclerView.setAdapter(new RecipeListAdapter(getApplicationContext(),recipe));
-
-                recipeListAdapter.updateRecipes(recipe,getApplicationContext());
+                recipes = response.body();
+//
+//                    Bundle bundle = new Bundle();
+//                    bundle.putParcelableArrayList(LIST_STATE_KEY,recipes);
+                mRecyclerView.setAdapter(new RecipeListAdapter(getApplicationContext(),recipes));
                 if(mIdlingResource != null){
                     mIdlingResource.setIdleState(true);
                 }
@@ -106,55 +143,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<ArrayList<Recipes>> call, Throwable t) {
                 mOfflineText = (TextView) findViewById(R.id.offline_text_view);
-            mOfflineImage = (ImageView) findViewById(R.id.offline_image);
-            mOfflineText.setVisibility(View.VISIBLE);
-            mOfflineImage.setVisibility(View.VISIBLE);
-
-            mRecyclerView.setVisibility(View.GONE);
+                mOfflineImage = (ImageView) findViewById(R.id.offline_image);
+                mOfflineText.setVisibility(View.VISIBLE);
+                mOfflineImage.setVisibility(View.VISIBLE);
+                mRecyclerView.setVisibility(View.GONE);
             }
         });
-
-
-        inflateViews();
-
         getIdlingResource();
-
-
     }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mBundleRecyclerViewState = new Bundle();
-        Parcelable listState = mRecyclerView.getLayoutManager().onSaveInstanceState();
-        mBundleRecyclerViewState.putParcelable("bundle_key",listState);
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (mBundleRecyclerViewState!=null){
-            Parcelable listState = mBundleRecyclerViewState.getParcelable("bundle_key");
-            mRecyclerView.getLayoutManager().onRestoreInstanceState(listState);
-        }
-    }
-
-    private void inflateViews(){
-        mRecyclerView = (RecyclerView) findViewById(R.id.recipe_recycler_view);
-        recipeListAdapter = new RecipeListAdapter(this, new ArrayList<Recipes>());
-
-        if(mTwoPane){
-             layoutManager = new GridLayoutManager(this,2);
-        }else{
-         layoutManager = new LinearLayoutManager(this);
-        }
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setAdapter(recipeListAdapter);
-
-
-    }
-
 
 }
