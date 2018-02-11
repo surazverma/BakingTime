@@ -1,5 +1,6 @@
 package com.example.android.bakingtime;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.FragmentManager;
@@ -38,12 +39,18 @@ public class RecipeDetailsActivity extends AppCompatActivity implements
         }else{
             mTwoPane = false;
         }
-        Bundle incomingBundle = getIntent().getExtras();
+        Intent intent = getIntent();
+        Bundle incomingBundle = intent.getExtras();
         if (incomingBundle!=null){
-            recipe = incomingBundle.getParcelable("recipe");
+            if(intent.hasExtra("intent_key")){
+                recipe = incomingBundle.getParcelable("recipe");
+
+            }
 
         } else{
-            recipe = savedInstanceState.getParcelable("recipe");
+            if (intent.hasExtra("intent_key")) {
+                recipe = savedInstanceState.getParcelable("recipe");
+            }
         }
 
         recipeName = recipe.getName();

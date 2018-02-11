@@ -70,6 +70,7 @@ public class RecipeDescriptionFragment extends Fragment {
 
         View rootView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_step_description,container,false);
         ImageView videoReplacementImageView = rootView.findViewById(R.id.replacement_image);
+
         Bundle incomingBundle = getArguments();
 
 
