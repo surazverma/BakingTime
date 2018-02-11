@@ -59,9 +59,9 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
                 Recipes currentRecipe = recipes.get(position);
                 Bundle currentRecipeInfo = new Bundle();
                 currentRecipeInfo.putParcelable("recipe",currentRecipe);
-                String key = "recipe details";
-                recipeDetailIntent.putExtra("intent_key",key);
                 recipeDetailIntent.putExtras(currentRecipeInfo);
+                recipeDetailIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
                 context.startActivity(recipeDetailIntent);
             }
         });

@@ -41,13 +41,13 @@ public class RecipeDetailsActivity extends AppCompatActivity implements
         Intent intent = getIntent();
         Bundle incomingBundle = intent.getExtras();
         if (incomingBundle!=null){
-            if(intent.hasExtra("intent_key")){
+
                 recipe = incomingBundle.getParcelable("recipe");
-            }
+
         } else{
-            if (intent.hasExtra("intent_key")) {
+
                 recipe = savedInstanceState.getParcelable("recipe");
-            }
+
         }
 
         recipeName = recipe.getName();

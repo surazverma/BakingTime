@@ -31,6 +31,7 @@ import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -40,6 +41,7 @@ import java.util.List;
 
 public class RecipeDescriptionFragment extends Fragment {
     private static final String SELECTED_POSITION ="player_position" ;
+    private static final String PLAYER_STATE = "player_state" ;
     private Step stepsDescription;
     private List<Step> currentRecipeStepList;
     private int currentStepPosition;
@@ -51,7 +53,7 @@ public class RecipeDescriptionFragment extends Fragment {
     private BandwidthMeter bandwidthMeter;
     private boolean mTwoPane;
     private long videoPosition;
-
+    private boolean playWhenReady;
 
 
     public interface ButtonClickListener{
@@ -69,6 +71,7 @@ public class RecipeDescriptionFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(CURRENT_STATE,stepsDescription);
         outState.putLong(SELECTED_POSITION,videoPosition);
+        outState.putBoolean(PLAYER_STATE,playWhenReady);
     }
 
     @Nullable
@@ -85,7 +88,8 @@ public class RecipeDescriptionFragment extends Fragment {
         simpleExoPlayerView  = rootView.findViewById(R.id.video_player_view);
         videoPosition = C.TIME_UNSET;
         if (savedInstanceState!=null){
-        stepsDescription = savedInstanceState.getParcelable(CURRENT_STATE);
+            playWhenReady = savedInstanceState.getBoolean(PLAYER_STATE);
+            stepsDescription = savedInstanceState.getParcelable(CURRENT_STATE);
             videoPosition = savedInstanceState.getLong(SELECTED_POSITION,C.TIME_UNSET);
         }
 
@@ -121,9 +125,12 @@ public class RecipeDescriptionFragment extends Fragment {
             playerAvailable = true;
         }
         else if (!thumbnailURL.isEmpty()){
-            mediaUri = Uri.parse(thumbnailURL).buildUpon().build();
-            initializePlayer(mediaUri);
-            playerAvailable = true;
+            simpleExoPlayer = null;
+            simpleExoPlayerView.setVisibility(View.GONE);
+            playerAvailable = false;
+            videoReplacementImageView.setVisibility(View.VISIBLE);
+            Picasso.with(getContext()).load(thumbnailURL).placeholder(R.drawable.video_replacement_image).error(R.drawable.video_replacement_image).into(videoReplacementImageView);
+
         }else{
             simpleExoPlayer = null;
             simpleExoPlayerView.setVisibility(View.GONE);
@@ -193,9 +200,12 @@ public class RecipeDescriptionFragment extends Fragment {
                     new DefaultExtractorsFactory(),null,null);
             simpleExoPlayerView.setPlayer(simpleExoPlayer);
             simpleExoPlayer.prepare(mediaSource);
-            if(videoPosition!=C.TIME_UNSET)simpleExoPlayer.seekTo(videoPosition);
-            simpleExoPlayer.setPlayWhenReady(true);
-
+            if(videoPosition!=C.TIME_UNSET)
+            {simpleExoPlayer.seekTo(videoPosition);
+            simpleExoPlayer.setPlayWhenReady(playWhenReady);
+            }else {
+                simpleExoPlayer.setPlayWhenReady(true);
+            }
         }
     }
 
@@ -214,6 +224,7 @@ public class RecipeDescriptionFragment extends Fragment {
         super.onPause();
         if (simpleExoPlayer!=null){
             videoPosition = simpleExoPlayer.getCurrentPosition();
+             playWhenReady =  simpleExoPlayer.getPlayWhenReady();
             simpleExoPlayer.stop();
             simpleExoPlayer.release();
             simpleExoPlayer = null;
