@@ -32,7 +32,6 @@ public class RecipeDetailsActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_details);
-//        getActionBar().setDisplayHomeAsUpEnabled(true);
 
         if(findViewById(R.id.recipe_details_linear_layout)!=null){
             mTwoPane = true;

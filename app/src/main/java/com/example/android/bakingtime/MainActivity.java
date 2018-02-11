@@ -2,6 +2,7 @@ package com.example.android.bakingtime;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
@@ -31,12 +32,16 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String SAVED_LAYOUT_MANAGER = "saved state";
     private RecyclerView mRecyclerView;
     private RecipeListAdapter recipeListAdapter;
     private TextView mOfflineText;
     private ImageView mOfflineImage;
     private boolean mTwoPane;
     private boolean landscape;
+    private RecyclerView.LayoutManager layoutManager;
+    private Bundle mBundleRecyclerViewState;
+
 
     @Nullable
     private SimpleIdlingResource mIdlingResource;
@@ -49,6 +54,9 @@ public class MainActivity extends AppCompatActivity {
         }
         return mIdlingResource;
     }
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<ArrayList<Recipes>> call, Response<ArrayList<Recipes>> response) {
                 ArrayList<Recipes> recipe = response.body();
                 mRecyclerView.setAdapter(new RecipeListAdapter(getApplicationContext(),recipe));
+
                 recipeListAdapter.updateRecipes(recipe,getApplicationContext());
                 if(mIdlingResource != null){
                     mIdlingResource.setIdleState(true);
@@ -107,19 +116,39 @@ public class MainActivity extends AppCompatActivity {
 
 
         inflateViews();
+
         getIdlingResource();
 
 
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mBundleRecyclerViewState = new Bundle();
+        Parcelable listState = mRecyclerView.getLayoutManager().onSaveInstanceState();
+        mBundleRecyclerViewState.putParcelable("bundle_key",listState);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mBundleRecyclerViewState!=null){
+            Parcelable listState = mBundleRecyclerViewState.getParcelable("bundle_key");
+            mRecyclerView.getLayoutManager().onRestoreInstanceState(listState);
+        }
+    }
+
     private void inflateViews(){
         mRecyclerView = (RecyclerView) findViewById(R.id.recipe_recycler_view);
         recipeListAdapter = new RecipeListAdapter(this, new ArrayList<Recipes>());
-        RecyclerView.LayoutManager layoutManager;
-        if(mTwoPane||landscape){
+
+        if(mTwoPane){
              layoutManager = new GridLayoutManager(this,2);
         }else{
-         layoutManager = new LinearLayoutManager(this);}
+         layoutManager = new LinearLayoutManager(this);
+        }
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(recipeListAdapter);

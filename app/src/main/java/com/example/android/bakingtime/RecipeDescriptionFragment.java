@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.example.android.bakingtime.Model.Step;
 import com.example.android.bakingtime.utils.StepsDescActivity;
+import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
@@ -38,16 +39,19 @@ import java.util.List;
  */
 
 public class RecipeDescriptionFragment extends Fragment {
+    private static final String SELECTED_POSITION ="player_position" ;
     private Step stepsDescription;
     private List<Step> currentRecipeStepList;
     private int currentStepPosition;
+    private Uri mediaUri;
 
     private SimpleExoPlayer simpleExoPlayer;
     private SimpleExoPlayerView simpleExoPlayerView;
     private static final String CURRENT_STATE = "current_state";
     private BandwidthMeter bandwidthMeter;
     private boolean mTwoPane;
-    private String recipeName;
+    private long videoPosition;
+
 
 
     public interface ButtonClickListener{
@@ -58,9 +62,13 @@ public class RecipeDescriptionFragment extends Fragment {
 
     }
 
+
+
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(CURRENT_STATE,stepsDescription);
+        outState.putLong(SELECTED_POSITION,videoPosition);
     }
 
     @Nullable
@@ -75,14 +83,16 @@ public class RecipeDescriptionFragment extends Fragment {
 
 
         simpleExoPlayerView  = rootView.findViewById(R.id.video_player_view);
+        videoPosition = C.TIME_UNSET;
         if (savedInstanceState!=null){
         stepsDescription = savedInstanceState.getParcelable(CURRENT_STATE);
+            videoPosition = savedInstanceState.getLong(SELECTED_POSITION,C.TIME_UNSET);
         }
 
         currentRecipeStepList = incomingBundle.getParcelableArrayList("ListOfSteps");
         currentStepPosition = incomingBundle.getInt("clickedPosition");
         mTwoPane = incomingBundle.getBoolean("mTwoPane");
-//        recipeName = incomingBundle.getString("recipe_name");
+
 
         if(mTwoPane){
                     buttonClickListener = (RecipeDetailsActivity)getActivity();
@@ -91,9 +101,10 @@ public class RecipeDescriptionFragment extends Fragment {
         }
         stepsDescription = currentRecipeStepList.get(currentStepPosition);
         bandwidthMeter = new DefaultBandwidthMeter();
-        Uri mediaUri;
-        final String description;
         String videoURL;
+
+        final String description;
+
         String thumbnailURL;
 
 
@@ -182,7 +193,9 @@ public class RecipeDescriptionFragment extends Fragment {
                     new DefaultExtractorsFactory(),null,null);
             simpleExoPlayerView.setPlayer(simpleExoPlayer);
             simpleExoPlayer.prepare(mediaSource);
+            if(videoPosition!=C.TIME_UNSET)simpleExoPlayer.seekTo(videoPosition);
             simpleExoPlayer.setPlayWhenReady(true);
+
         }
     }
 
@@ -200,9 +213,19 @@ public class RecipeDescriptionFragment extends Fragment {
     public void onPause() {
         super.onPause();
         if (simpleExoPlayer!=null){
+            videoPosition = simpleExoPlayer.getCurrentPosition();
             simpleExoPlayer.stop();
             simpleExoPlayer.release();
+            simpleExoPlayer = null;
 
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mediaUri!=null){
+            initializePlayer(mediaUri);
         }
     }
 

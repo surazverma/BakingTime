@@ -31,11 +31,13 @@ public class IngredientsHeaderFragment extends Fragment implements RecipeStepLis
     private RecipeStepListAdapter mAdapter;
     private ArrayList<Ingredient> recipeIngredients;
     private IngredientListAdapter mIngredientAdapter;
-
+    private static final String BUNDLE_RECYCLER_LAYOUT = "RecipeDetailsActivity.RecyclerView.layout";
     private static final String CURRENT_STATE = "current_state";
     private Bundle currentStateForFragment;
     private boolean mTwoPane;
     private String recipeName;
+    private RecyclerView stepList;
+    private RecyclerView ingredientRecyclerView;
 
 
     public IngredientsHeaderFragment(){
@@ -71,14 +73,6 @@ public class IngredientsHeaderFragment extends Fragment implements RecipeStepLis
 
     }
 
-
-
-
-
-
-
-
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putParcelableArrayList(CURRENT_STATE, (ArrayList<? extends Parcelable>) recipeSteps);
@@ -98,14 +92,14 @@ public class IngredientsHeaderFragment extends Fragment implements RecipeStepLis
         recipeIngredients = incomingBundle.getParcelableArrayList("ingredients");
         mTwoPane = incomingBundle.getBoolean("mTwoPane");
         recipeName = incomingBundle.getString("recipe_name");
-        RecyclerView stepList = rootView.findViewById(R.id.recipe_step_list_rv);
+        stepList = rootView.findViewById(R.id.recipe_step_list_rv);
         mAdapter = new RecipeStepListAdapter(getContext(),new ArrayList<Step>(),this);
         mAdapter.updateList(recipeSteps,getContext());
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         stepList.setLayoutManager(layoutManager);
         stepList.setAdapter(mAdapter);
 
-        RecyclerView ingredientRecyclerView = rootView.findViewById(R.id.ingredients_list);
+        ingredientRecyclerView= rootView.findViewById(R.id.ingredients_list);
         RecyclerView.LayoutManager ingredientLayoutManager = new LinearLayoutManager(getContext());
         mIngredientAdapter = new IngredientListAdapter(getContext(),new ArrayList<Ingredient>());
         mIngredientAdapter.updateList(recipeIngredients,getContext());
@@ -117,8 +111,18 @@ public class IngredientsHeaderFragment extends Fragment implements RecipeStepLis
 
     }
 
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (savedInstanceState!=null){
+            Parcelable savedRecyclerLayoutState = savedInstanceState.getParcelable(BUNDLE_RECYCLER_LAYOUT);
+            stepList.getLayoutManager().onRestoreInstanceState(savedRecyclerLayoutState);
+            ingredientRecyclerView.getLayoutManager().onRestoreInstanceState(savedRecyclerLayoutState);
+        }
+    }
 
-
-
-
+    //    @Override
+//    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+//        super.onActivityCreated(savedInstanceState);
+//    }
 }
