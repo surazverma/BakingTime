@@ -129,9 +129,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<ArrayList<Recipes>> call, Response<ArrayList<Recipes>> response) {
                 recipes = response.body();
-//
-//                    Bundle bundle = new Bundle();
-//                    bundle.putParcelableArrayList(LIST_STATE_KEY,recipes);
+
                 mRecyclerView.setAdapter(new RecipeListAdapter(getApplicationContext(),recipes));
                 if(mIdlingResource != null){
                     mIdlingResource.setIdleState(true);
